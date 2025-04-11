@@ -46,6 +46,19 @@ function uploadetel(req,res) {
 
 }
 
+function uploadrecept(req,res) {
+    console.log(req.file);
+    const publicID = req.body.publicID;
+    cloudinary.uploader.upload_stream({resource_type:'auto',public_id:publicID,asset_folder:"PlateShare/receptek"},(error,result) => {
+        if(error) {
+            console.log(error)
+            return res.status(500).json({error:'Error uploading to Cloudinary'});
+        }
+        res.json({public_id:(publicID == "" ? result.public_id:publicID),url:result.secure_url});
+    }).end(req.file.buffer);
+
+}
+
 async function delKep(req,res) {
     if(req.params.publicId) {
         const result  = await cloudinary.uploader.destroy(req.params.publicId);
@@ -58,6 +71,7 @@ async function delKep(req,res) {
 app.get('/', (req, resp) => resp.send('Élelmiszermentő platform v1.0.0'));
 app.post("/pfp",upload.single("fajl"),uploadpfp);
 app.post("/etel",upload.single("fajl"),uploadetel);
+app.post("/recept",upload.single("fajl"),uploadrecept);
 app.delete("/del/:publicId",delKep);
 
 app.listen(88, (error) => {
