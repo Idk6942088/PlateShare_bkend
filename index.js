@@ -85,7 +85,7 @@ app.delete("/del/:publicId", delKep);
 
 // Szerver indítása csak akkor, ha nem tesztkörnyezetben vagyunk
 const startServer = () => {
-    const PORT = process.env.PORT || 88;
+    const PORT = process.env.PORT || 3000;
     return app.listen(PORT, (error) => {
       console.log(error ? error : `Server on port ${PORT}`);
     });
